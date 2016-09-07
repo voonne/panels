@@ -1,0 +1,144 @@
+{**
+ * This file is part of the Voonne platform (http://www.voonne.org)
+ *
+ * Copyright (c) 2016 Jan Lavička (mail@janlavicka.name)
+ *
+ * For the full copyright and license information, please view the file licence.md that was distributed with this source code.
+ *}
+
+{include #container, component => $formScope}
+
+<div class="panel-footer">
+	{foreach $formScope->getComponents() as $component}
+		{continueIf !($component instanceof Voonne\Forms\Controls\SubmitButton)}
+		{var $name = $control->getFullName($component)}
+
+		{input $name, class => 'btn btn-primary pull-right'}
+	{/foreach}
+</div>
+
+{define container}
+	{foreach $component->getComponents() as $component}
+		{continueIf $component instanceof Voonne\Forms\Controls\SubmitButton}
+
+		{if $component instanceof Voonne\Forms\Container}
+			{if $component instanceof Voonne\Forms\Container}
+				<h4 n:ifcontent>{$component->getLabel()|translate}</h4>
+				<hr>
+			{/if}
+
+			{include #container, component => $component}
+		{elseif $component instanceof Voonne\Forms\Controls\TextInput || $component instanceof Voonne\Forms\Controls\Password}
+			{var $name = $control->getFullName($component)}
+
+			<div class="form-group{if $component->hasErrors()} has-error{/if}">
+				<label n:name="$name" class="col-sm-3 control-label">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
+				<div class="col-sm-9 col-xs-12">
+					{input $name, class => 'form-control'}
+				</div>
+				<div class="col-sm-9 col-xs-12 col-sm-offset-3">
+					<span class="help-block error-block" n:ifcontent>{$component->getError()|translate}</span>
+					<span class="help-block" n:ifcontent>{$component->getDescription()|translate}</span>
+				</div>
+			</div>
+		{elseif $component instanceof Voonne\Forms\Controls\TextArea}
+			{var $name = $control->getFullName($component)}
+
+			<div class="form-group{if $component->hasErrors()} has-error{/if}">
+				<label n:name="$name" class="col-sm-3 control-label">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
+				<div class="col-sm-9 col-xs-12">
+					{input $name, class => 'form-control'}
+					<span class="help-block error-block" n:ifcontent>{$component->getError()|translate}</span>
+					<span class="help-block" n:ifcontent>{$component->getDescription()|translate}</span>
+				</div>
+			</div>
+		{elseif $component instanceof Voonne\Forms\Controls\UploadControl}
+			{var $name = $control->getFullName($component)}
+
+			<div class="form-group{if $component->hasErrors()} has-error{/if}">
+				<label n:name="$name" class="col-sm-3 control-label">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
+				<div class="col-sm-9 col-xs-12">
+					{input $name, class => 'form-control'}
+					<span class="help-block error-block" n:ifcontent>{$component->getError()|translate}</span>
+					<span class="help-block" n:ifcontent>{$component->getDescription()|translate}</span>
+				</div>
+			</div>
+		{elseif $component instanceof Voonne\Forms\Controls\Checkbox}
+			{var $name = $control->getFullName($component)}
+
+			<div class="form-group{if $component->hasErrors()} has-error{/if}">
+				<div class="col-sm-9 col-xs-12 col-sm-offset-3">
+					<div class="checkbox">
+						{input $name}
+					</div>
+					<span class="help-block error-block" n:ifcontent>{$component->getError()|translate}</span>
+					<span class="help-block" n:ifcontent>{$component->getDescription()|translate}</span>
+				</div>
+			</div>
+		{elseif $component instanceof Voonne\Forms\Controls\RadioList}
+			{var $name = $control->getFullName($component)}
+
+			<div class="form-group{if $component->hasErrors()} has-error{/if}">
+				<label n:name="$name" class="col-sm-3 control-label">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
+				<div class="col-sm-9 col-xs-12">
+					<div class="radio">
+						{input $name}
+						<span class="help-block error-block" n:ifcontent>{$component->getError()|translate}</span>
+						<span class="help-block" n:ifcontent>{$component->getDescription()|translate}</span>
+					</div>
+				</div>
+			</div>
+		{elseif $component instanceof Voonne\Forms\Controls\CheckboxList}
+			{var $name = $control->getFullName($component)}
+
+			<div class="form-group{if $component->hasErrors()} has-error{/if}">
+				<label n:name="$name" class="col-sm-3 control-label">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
+				<div class="col-sm-9 col-xs-12">
+					<div class="checkbox">
+						{input $name}
+						<span class="help-block error-block" n:ifcontent>{$component->getError()|translate}</span>
+						<span class="help-block" n:ifcontent>{$component->getDescription()|translate}</span>
+					</div>
+				</div>
+			</div>
+		{elseif $component instanceof Voonne\Forms\Controls\SelectBox || $component instanceof Voonne\Forms\Controls\MultiSelectBox}
+			{var $name = $control->getFullName($component)}
+
+			<div class="form-group{if $component->hasErrors()} has-error{/if}">
+				<label n:name="$name" class="col-sm-3 control-label">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
+				<div class="col-sm-9 col-xs-12">
+					{input $name, class => 'form-control'}
+					<span class="help-block error-block" n:ifcontent>{$component->getError()|translate}</span>
+					<span class="help-block" n:ifcontent>{$component->getDescription()|translate}</span>
+				</div>
+			</div>
+		{elseif $component instanceof Voonne\Forms\Controls\Button}
+			{var $name = $control->getFullName($component)}
+
+			<div class="form-group">
+				<div class="col-sm-9 col-xs-12 col-sm-offset-3">
+					{input $name, class => 'btn btn-default'}
+				</div>
+			</div>
+		{elseif $component instanceof Voonne\Forms\Controls\ImageButton}
+			{var $name = $control->getFullName($component)}
+
+			<div class="form-group">
+				<div class="col-sm-9 col-xs-12 col-sm-offset-3">
+					{input $name, class => 'btn'}
+				</div>
+			</div>
+		{else}
+			{var $name = $control->getFullName($component)}
+
+			<div class="form-group{if $component->hasErrors()} has-error{/if}">
+				{label $name, class => 'col-sm-3 control-label'/}
+				<div class="col-sm-9 col-xs-12 input-group">
+					{input $name}
+					<span class="help-block error-block" n:ifcontent>{$component->getError()|translate}</span>
+					<span class="help-block" n:ifcontent>{$component->getDescription()|translate}</span>
+				</div>
+			</div>
+		{/if}
+	{/foreach}
+{/define}
