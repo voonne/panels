@@ -8,25 +8,32 @@
  * For the full copyright and license information, please view the file licence.md that was distributed with this source code.
  */
 
-namespace Voonne\Panels\Renderers\BasicPanelRenderer;
+namespace Voonne\Panels\Renderers\TablePanelRenderer;
 
-use Voonne\Panels\BasicPanel;
-use Voonne\Panels\Renderers\PanelRenderer;
+use Doctrine\ORM\EntityManagerInterface;
+use Voonne\Panels\Panels\TablePanel\TablePanel;
+use Voonne\Panels\Renderers\Renderer;
 
 
-class BasicPanelRenderer extends PanelRenderer
+class TableRenderer extends Renderer
 {
 
 	/**
-	 * @var BasicPanel
+	 * @var EntityManagerInterface
+	 */
+	private $entityManager;
+
+	/**
+	 * @var TablePanel
 	 */
 	private $panel;
 
 
-	public function __construct(BasicPanel $panel)
+	public function __construct(EntityManagerInterface $entityManager, TablePanel $panel)
 	{
 		parent::__construct();
 
+		$this->entityManager = $entityManager;
 		$this->panel = $panel;
 	}
 
@@ -35,13 +42,15 @@ class BasicPanelRenderer extends PanelRenderer
 	{
 		parent::beforeRender();
 
+		$this->panel->injectPrimary($this->entityManager);
+
 		$this->addComponent($this->panel, 'panel');
 	}
 
 
 	public function render()
 	{
-		$this->template->setFile(__DIR__ . '/BasicPanelRenderer.latte');
+		$this->template->setFile(__DIR__ . '/TableRenderer.latte');
 
 		$this->template->panel = $this->panel;
 

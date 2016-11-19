@@ -13,7 +13,7 @@ namespace Voonne\Panels\Renderers;
 use Nette\DI\Container;
 use ReflectionClass;
 use Voonne\Panels\NotRegisteredException;
-use Voonne\Panels\Panel;
+use Voonne\Panels\Panels\Panel;
 
 
 class RendererManager

@@ -7,10 +7,10 @@ use Mockery;
 use Mockery\MockInterface;
 use Nette\DI\Container;
 use UnitTester;
-use Voonne\Panels\BasicPanel;
 use Voonne\Panels\NotRegisteredException;
-use Voonne\Panels\Renderers\BasicPanelRenderer\BasicPanelRendererFactory;
-use Voonne\Panels\Renderers\BlankPanelRenderer\BlankPanelRendererFactory;
+use Voonne\Panels\Panels\BasicPanel\BasicPanel;
+use Voonne\Panels\Renderers\BasicPanelRenderer\BasicRendererFactory;
+use Voonne\Panels\Renderers\BlankPanelRenderer\BlankRendererFactory;
 use Voonne\Panels\Renderers\RendererManager;
 
 
@@ -49,8 +49,8 @@ class RendererManagerTest extends Unit
 
 	public function testGetExistingRendererFactory()
 	{
-		$basicPanelRendererFactory = Mockery::mock(BasicPanelRendererFactory::class);
-		$blankPanelRendererFactory = Mockery::mock(BlankPanelRendererFactory::class);
+		$basicPanelRendererFactory = Mockery::mock(BasicRendererFactory::class);
+		$blankPanelRendererFactory = Mockery::mock(BlankRendererFactory::class);
 
 		$panel = Mockery::mock(BasicPanel::class);
 
@@ -75,7 +75,7 @@ class RendererManagerTest extends Unit
 
 	public function testGetNonexistentRendererFactory()
 	{
-		$blankPanelRendererFactory = Mockery::mock(BlankPanelRendererFactory::class);
+		$blankPanelRendererFactory = Mockery::mock(BlankRendererFactory::class);
 
 		$panel = Mockery::mock(BasicPanel::class);
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace Voonne\TestPanels;
+namespace Voonne\TestPanels\Panels\BasicPanel;
 
 use Codeception\Test\Unit;
 use Mockery;
 use UnitTester;
-use Voonne\Panels\BasicPanel;
+use Voonne\Panels\Panels\BasicPanel\BasicPanel;
 
 
 class BasicPanelTest extends Unit

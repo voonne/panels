@@ -10,20 +10,20 @@
 
 namespace Voonne\Panels\Renderers\BasicPanelRenderer;
 
-use Voonne\Panels\BasicPanel;
+use Voonne\Panels\Panels\BasicPanel\BasicPanel;
 
 
-class BasicPanelRendererFactory
+class BasicRendererFactory
 {
 
 	/**
 	 * @param BasicPanel $panel
 	 *
-	 * @return BasicPanelRenderer
+	 * @return BasicRenderer
 	 */
 	public function create(BasicPanel $panel)
 	{
-		return new BasicPanelRenderer($panel);
+		return new BasicRenderer($panel);
 	}
 
 }

@@ -8,22 +8,22 @@
  * For the full copyright and license information, please view the file licence.md that was distributed with this source code.
  */
 
-namespace Voonne\Panels\Renderers\BlankPanelRenderer;
+namespace Voonne\Panels\Renderers\FormPanelRenderer;
 
-use Voonne\Panels\BlankPanel;
-use Voonne\Panels\Renderers\PanelRenderer;
+use Voonne\Panels\Panels\FormPanel\FormPanel;
+use Voonne\Panels\Renderers\Renderer;
 
 
-class BlankPanelRenderer extends PanelRenderer
+class FormRenderer extends Renderer
 {
 
 	/**
-	 * @var BlankPanel
+	 * @var FormPanel
 	 */
 	private $panel;
 
 
-	public function __construct(BlankPanel $panel)
+	public function __construct(FormPanel $panel)
 	{
 		parent::__construct();
 
@@ -35,13 +35,15 @@ class BlankPanelRenderer extends PanelRenderer
 	{
 		parent::beforeRender();
 
+		$this->panel->injectPrimary($this->getContentForm());
+
 		$this->addComponent($this->panel, 'panel');
 	}
 
 
 	public function render()
 	{
-		$this->template->setFile(__DIR__ . '/BlankPanelRenderer.latte');
+		$this->template->setFile(__DIR__ . '/FormRenderer.latte');
 
 		$this->template->panel = $this->panel;
 

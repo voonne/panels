@@ -1,6 +1,6 @@
 <?php
 
-namespace Voonne\TestPanels;
+namespace Voonne\TestPanels\Panels;
 
 use Codeception\Test\Unit;
 use Mockery;
@@ -8,11 +8,11 @@ use Nette\Utils\Strings;
 use ReflectionClass;
 use UnitTester;
 use Voonne\Layouts\Layout;
-use Voonne\Panels\BasicPanel;
-use Voonne\Panels\BlankPanel;
 use Voonne\Panels\DuplicateEntryException;
 use Voonne\Panels\InvalidArgumentException;
-use Voonne\Panels\PanelManager;
+use Voonne\Panels\Panels\BasicPanel\BasicPanel;
+use Voonne\Panels\Panels\BlankPanel\BlankPanel;
+use Voonne\Panels\Panels\PanelManager;
 
 
 class PanelManagerTest extends Unit

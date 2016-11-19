@@ -10,20 +10,20 @@
 
 namespace Voonne\Panels\Renderers\BlankPanelRenderer;
 
-use Voonne\Panels\BlankPanel;
+use Voonne\Panels\Panels\BlankPanel\BlankPanel;
 
 
-class BlankPanelRendererFactory
+class BlankRendererFactory
 {
 
 	/**
 	 * @param BlankPanel $panel
 	 *
-	 * @return BlankPanelRenderer
+	 * @return BlankRenderer
 	 */
 	public function create(BlankPanel $panel)
 	{
-		return new BlankPanelRenderer($panel);
+		return new BlankRenderer($panel);
 	}
 
 }

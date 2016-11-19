@@ -1,0 +1,65 @@
+{**
+ * This file is part of the Voonne platform (http://www.voonne.org)
+ *
+ * Copyright (c) 2016 Jan Lavička (mail@janlavicka.name)
+ *
+ * For the full copyright and license information, please view the file licence.md that was distributed with this source code.
+ *}
+
+{foreach $customTemplates as $customTemplate}
+	{import $customTemplate}
+{/foreach}
+
+<div class="table-panel">
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th n:foreach="$columns as $column">
+						{if $column->isSortable()}
+							{if $sort != $column->getName()}
+								<a n:href="this, sort => $column->getName(), order => 'ASC'">{$column->getLabel()|translate}</a>
+							{elseif $order == 'ASC'}
+								<a n:href="this, sort => $column->getName(), order => 'DESC'">{$column->getLabel()|translate} <i class="fa fa-sort-amount-asc"></i></a>
+							{elseif $order == 'DESC'}
+								<a n:href="this, sort => null, order => null">{$column->getLabel()|translate} <i class="fa fa-sort-amount-desc"></i></a>
+							{/if}
+						{else}
+							{$column->getLabel()|translate}
+						{/if}
+					</th>
+					<th n:if="count($actions) != 0" class="table-panel__action">Akce</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr n:foreach="$rows as $row">
+					<td n:foreach="$columns as $column">
+						{if !empty($column->getTemplate())}
+							{include #$column->getTemplate(), row => $row}
+						{else}
+							{$column->getContent($row)|translate}
+						{/if}
+					</td>
+					<td n:if="count($actions) != 0">
+						<div class="btn-group">
+							<a href="{array_values($actions)[0]->getLink($row)}" class="btn btn-default">
+								{array_values($actions)[0]->getLabel()|translate}
+							</a>
+							{if count($actions) > 1}
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+								<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li n:foreach="array_values($actions) as $action">
+									{continueIf $iterator->counter == 1}
+									<a href="{$action->getLink($row)}">{$action->getLabel()|translate}</a>
+								</li>
+							</ul>
+							{/if}
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

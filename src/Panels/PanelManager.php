@@ -1,11 +1,21 @@
 <?php
 
-namespace Voonne\Panels;
+/**
+ * This file is part of the Voonne platform (http://www.voonne.org)
+ *
+ * Copyright (c) 2016 Jan Lavička (mail@janlavicka.name)
+ *
+ * For the full copyright and license information, please view the file licence.md that was distributed with this source code.
+ */
+
+namespace Voonne\Panels\Panels;
 
 use Nette\SmartObject;
 use Nette\Utils\Strings;
 use ReflectionClass;
 use Voonne\Layouts\Layout;
+use Voonne\Panels\DuplicateEntryException;
+use Voonne\Panels\InvalidArgumentException;
 
 
 class PanelManager

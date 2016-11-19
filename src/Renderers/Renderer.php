@@ -12,11 +12,11 @@ namespace Voonne\Panels\Renderers;
 use Nette\ComponentModel\IComponent;
 use Voonne\Controls\Control;
 use Voonne\Panels\InvalidStateException;
-use Voonne\Panels\Panel;
+use Voonne\Panels\Panels\Panel;
 use Voonne\Voonne\Content\ContentForm;
 
 
-abstract class PanelRenderer extends Control
+abstract class Renderer extends Control
 {
 
 	/**

@@ -8,22 +8,12 @@
  * For the full copyright and license information, please view the file licence.md that was distributed with this source code.
  */
 
-namespace Voonne\Panels\Renderers\FormPanelRenderer;
+namespace Voonne\Panels\Panels\BlankPanel;
 
-use Voonne\Panels\FormPanel;
+use Voonne\Panels\Panels\Panel;
 
 
-class FormPanelRendererFactory
+abstract class BlankPanel extends Panel
 {
-
-	/**
-	 * @param FormPanel $panel
-	 *
-	 * @return FormPanelRenderer
-	 */
-	public function create(FormPanel $panel)
-	{
-		return new FormPanelRenderer($panel);
-	}
 
 }

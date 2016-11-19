@@ -11,6 +11,18 @@
 namespace Voonne\Panels;
 
 
+class IOException extends \RuntimeException
+{
+
+}
+
+
+class FileNotFoundException extends IOException
+{
+
+}
+
+
 class InvalidStateException extends \RuntimeException
 {
 

@@ -8,7 +8,9 @@
  * For the full copyright and license information, please view the file licence.md that was distributed with this source code.
  */
 
-namespace Voonne\Panels;
+namespace Voonne\Panels\Panels\BasicPanel;
+
+use Voonne\Panels\Panels\Panel;
 
 
 abstract class BasicPanel extends Panel
