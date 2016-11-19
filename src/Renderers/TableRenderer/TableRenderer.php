@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the file licence.md that was distributed with this source code.
  */
 
-namespace Voonne\Panels\Renderers\TablePanelRenderer;
+namespace Voonne\Panels\Renderers\TableRenderer;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Voonne\Panels\Panels\TablePanel\TablePanel;

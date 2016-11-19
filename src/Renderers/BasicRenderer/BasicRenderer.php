@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the file licence.md that was distributed with this source code.
  */
 
-namespace Voonne\Panels\Renderers\BasicPanelRenderer;
+namespace Voonne\Panels\Renderers\BasicRenderer;
 
 use Voonne\Panels\Panels\BasicPanel\BasicPanel;
 use Voonne\Panels\Renderers\Renderer;
