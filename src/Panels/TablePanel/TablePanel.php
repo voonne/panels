@@ -12,6 +12,7 @@ namespace Voonne\Panels\Panels\TablePanel;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use Nette\Utils\Paginator;
 use Voonne\Panels\FileNotFoundException;
 use Voonne\Panels\InvalidArgumentException;
 use Voonne\Panels\InvalidStateException;
@@ -39,6 +40,11 @@ abstract class TablePanel extends Panel
 	private $title;
 
 	/**
+	 * @var integer
+	 */
+	private $limit = 50;
+
+	/**
 	 * @var array
 	 */
 	private $columns = [];
@@ -57,6 +63,12 @@ abstract class TablePanel extends Panel
 	 * @var array
 	 */
 	public $onQueryCreate = [];
+
+	/**
+	 * @var integer
+	 * @persistent
+	 */
+	public $page = 1;
 
 	/**
 	 * @var string
@@ -100,6 +112,24 @@ abstract class TablePanel extends Panel
 	public function setTitle($title)
 	{
 		$this->title = $title;
+	}
+
+
+	/**
+	 * @return integer
+	 */
+	public function getLimit()
+	{
+		return $this->limit;
+	}
+
+
+	/**
+	 * @param integer $limit
+	 */
+	public function setLimit($limit)
+	{
+		$this->limit = $limit;
 	}
 
 
@@ -159,7 +189,14 @@ abstract class TablePanel extends Panel
 			throw new InvalidArgumentException('From statement must be declared in QueryBuilder.');
 		}
 
+		$paginator = new Paginator();
+		$paginator->setItemsPerPage($this->limit);
+		$paginator->setPage($this->page);
+		$paginator->setItemCount((new \Doctrine\ORM\Tools\Pagination\Paginator($this->queryBuilder))->count());
+
 		$this->queryBuilder->orderBy($this->queryBuilder->getDQLPart('from')[0]->getAlias() . '.' . $this->sort, $this->order);
+		$this->queryBuilder->setMaxResults($paginator->getItemsPerPage());
+		$this->queryBuilder->setFirstResult(($paginator->getItemsPerPage() * $paginator->getPage()) - $paginator->getItemsPerPage());
 
 		$this->template->columns = $this->columns;
 		$this->template->actions = $this->actions;
@@ -167,6 +204,7 @@ abstract class TablePanel extends Panel
 		$this->template->order = $this->order;
 		$this->template->customTemplates = $this->customTemplates;
 		$this->template->rows = $this->queryBuilder->getQuery()->getResult();
+		$this->template->paginator = $paginator;
 
 		$this->template->render();
 	}

@@ -43,6 +43,16 @@ class TablePanelTest extends Unit
 		$this->assertEquals('title', $this->tablePanel->getTitle());
 	}
 
+
+	public function testSetLimit()
+	{
+		$this->assertEquals(50, $this->tablePanel->getLimit());
+
+		$this->tablePanel->setLimit(100);
+
+		$this->assertEquals(100, $this->tablePanel->getLimit());
+	}
+
 }
 
 class TestTablePanel extends TablePanel
