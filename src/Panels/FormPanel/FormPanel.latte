@@ -139,6 +139,57 @@
 					<span class="help-block" n:ifcontent>{$component->getDescription()|translate}</span>
 				</div>
 			</div>
+		{elseif $component instanceof Voonne\Forms\Controls\DatePicker}
+			{var $name = $control->getFullName($component)}
+
+			<div class="form-group{if $component->hasErrors()} has-error{/if}">
+				<label n:name="$name" class="col-sm-3 control-label">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
+				<div class="col-sm-9 col-xs-12">
+					<div class="input-group">
+						{input $name, class => 'form-control date-picker'}
+						<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+					</div>
+				</div>
+
+				<div class="col-sm-9 col-xs-12 col-sm-offset-3">
+					<span class="help-block error-block" n:ifcontent>{$component->getError()|translate}</span>
+					<span class="help-block" n:ifcontent>{$component->getDescription()|translate}</span>
+				</div>
+			</div>
+		{elseif $component instanceof Voonne\Forms\Controls\TimePicker}
+			{var $name = $control->getFullName($component)}
+
+			<div class="form-group{if $component->hasErrors()} has-error{/if}">
+				<label n:name="$name" class="col-sm-3 control-label">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
+				<div class="col-sm-9 col-xs-12">
+					<div class="input-group">
+						{input $name, class => 'form-control time-picker'}
+						<div class="input-group-addon"><i class="fa fa-clock-o"></i></div>
+					</div>
+				</div>
+
+				<div class="col-sm-9 col-xs-12 col-sm-offset-3">
+					<span class="help-block error-block" n:ifcontent>{$component->getError()|translate}</span>
+					<span class="help-block" n:ifcontent>{$component->getDescription()|translate}</span>
+				</div>
+			</div>
+		{elseif $component instanceof Voonne\Forms\Controls\DateTimePicker}
+			{var $name = $control->getFullName($component)}
+
+			<div class="form-group{if $component->hasErrors()} has-error{/if}">
+				<label n:name="$name" class="col-sm-3 control-label">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
+				<div class="col-sm-9 col-xs-12">
+					<div class="input-group">
+						{input $name, class => 'form-control datetime-picker'}
+						<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+					</div>
+				</div>
+
+				<div class="col-sm-9 col-xs-12 col-sm-offset-3">
+					<span class="help-block error-block" n:ifcontent>{$component->getError()|translate}</span>
+					<span class="help-block" n:ifcontent>{$component->getDescription()|translate}</span>
+				</div>
+			</div>
 		{elseif $component instanceof Voonne\Forms\Controls\Button}
 			{var $name = $control->getFullName($component)}
 
@@ -163,9 +214,11 @@
 			{var $name = $control->getFullName($component)}
 
 			<div class="form-group{if $component->hasErrors()} has-error{/if}">
-				{label $name, class => 'col-sm-3 control-label'/}
-				<div class="col-sm-9 col-xs-12 input-group">
-					{input $name}
+				<label n:name="$name" class="col-sm-3 control-label">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
+				<div class="col-sm-9 col-xs-12">
+					<div class="input-group">
+						{input $name, class => 'form-control'}
+					</div>
 				</div>
 
 				<div class="col-sm-9 col-xs-12 col-sm-offset-3">
