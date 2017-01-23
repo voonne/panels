@@ -209,4 +209,19 @@ abstract class TablePanel extends Panel
 		$this->template->render();
 	}
 
+
+	public function getActions($row)
+	{
+		$actions = [];
+
+		foreach ($this->actions as $action) {
+			/** @var Action $action */
+			if (!empty($action->getLink($row))) {
+				$actions[] = $action;
+			}
+		}
+
+		return $actions;
+	}
+
 }

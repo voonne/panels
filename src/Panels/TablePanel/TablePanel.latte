@@ -39,17 +39,17 @@
 						{$column->getContent($row)|translate}
 					{/if}
 				</td>
-				<td n:if="count($actions) != 0">
+				<td n:if="count($control->getActions($row)) != 0">
 					<div class="btn-group">
-						<a href="{array_values($actions)[0]->getLink($row)}" class="btn btn-default">
-							{array_values($actions)[0]->getLabel()|translate}
+						<a href="{array_values($control->getActions($row))[0]->getLink($row)}" class="btn btn-default">
+							{array_values($control->getActions($row))[0]->getLabel()|translate}
 						</a>
-						{if count($actions) > 1}
+						{if count($control->getActions($row)) > 1}
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 							<span class="caret"></span>
 						</button>
 						<ul class="dropdown-menu">
-							<li n:foreach="array_values($actions) as $action">
+							<li n:foreach="array_values($control->getActions($row)) as $action">
 								{continueIf $iterator->counter == 1}
 								<a href="{$action->getLink($row)}">{$action->getLabel()|translate}</a>
 							</li>
