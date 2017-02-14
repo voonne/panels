@@ -11,7 +11,7 @@
 namespace Voonne\Panels\Panels;
 
 use Voonne\Controls\Control;
-use Voonne\Forms\Form;
+use Voonne\Forms\Container;
 
 
 abstract class Panel extends Control
@@ -20,9 +20,9 @@ abstract class Panel extends Control
 	/**
 	 * Adjusted ContentFrom for use in a panel.
 	 *
-	 * @param Form $form
+	 * @param Container $container
 	 */
-	public function setupForm(Form $form)
+	public function setupForm(Container $container)
 	{
 
 	}

@@ -31,7 +31,7 @@ abstract class FormPanel extends Panel
 	/**
 	 * @var Container
 	 */
-	private $formScope;
+	private $container;
 
 
 	/**
@@ -53,34 +53,15 @@ abstract class FormPanel extends Panel
 
 
 	/**
-	 * @param ContentForm $contentForm
+	 * @param Container $container
 	 */
-	public function injectPrimary(ContentForm $contentForm)
+	public function injectPrimary(Container $container)
 	{
-		if($this->formScope !== null) {
+		if($this->container !== null) {
 			throw new InvalidStateException('Method ' . __METHOD__ . ' is intended for initialization and should not be called more than once.');
 		}
 
-		$this->formScope = $contentForm;
-	}
-
-
-	/**
-	 * @param Container $formScope
-	 */
-	public function setFormScope(Container $formScope)
-	{
-		$form = $formScope;
-
-		while(!empty($form->getParent())) {
-			$form = $form->getParent();
-		}
-
-		if(!($form instanceof Form)) {
-			throw new InvalidArgumentException("Form scope must be child of '" . Form::class . "'.");
-		}
-
-		$this->formScope = $formScope;
+		$this->container = $container;
 	}
 
 
@@ -88,7 +69,7 @@ abstract class FormPanel extends Panel
 	{
 		$this->template->setFile(__DIR__ . '/FormPanel.latte');
 
-		$this->template->formScope = $this->formScope;
+		$this->template->container = $this->container;
 
 		$this->template->render();
 	}

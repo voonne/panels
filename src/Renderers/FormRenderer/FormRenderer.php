@@ -35,7 +35,7 @@ class FormRenderer extends Renderer
 	{
 		parent::beforeRender();
 
-		$this->panel->injectPrimary($this->getContentForm());
+		$this->panel->injectPrimary($this->getContainer());
 
 		$this->addComponent($this->panel, 'panel');
 	}

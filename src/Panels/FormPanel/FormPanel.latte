@@ -6,10 +6,10 @@
  * For the full copyright and license information, please view the file licence.md that was distributed with this source code.
  *}
 
-{include #container, component => $formScope}
+{include #container, component => $container}
 
 <div class="panel-footer">
-	{foreach $formScope->getComponents() as $component}
+	{foreach $container->getComponents() as $component}
 		{continueIf !($component instanceof Voonne\Forms\Controls\SubmitButton)}
 		{var $name = $control->getFullName($component)}
 

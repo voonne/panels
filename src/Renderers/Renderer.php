@@ -11,39 +11,39 @@ namespace Voonne\Panels\Renderers;
 
 use Nette\ComponentModel\IComponent;
 use Voonne\Controls\Control;
+use Voonne\Forms\Container;
 use Voonne\Panels\InvalidStateException;
 use Voonne\Panels\Panels\Panel;
-use Voonne\Voonne\Content\ContentForm;
 
 
 abstract class Renderer extends Control
 {
 
 	/**
-	 * @var ContentForm
+	 * @var Container
 	 */
-	private $contentForm;
+	private $container;
 
 
 	/**
-	 * @return ContentForm
+	 * @return Container
 	 */
-	public function getContentForm()
+	public function getContainer()
 	{
-		return $this->contentForm;
+		return $this->container;
 	}
 
 
 	/**
-	 * @param ContentForm $contentForm
+	 * @param Container $container
 	 */
-	public function injectPrimary(ContentForm $contentForm)
+	public function injectPrimary(Container $container)
 	{
-		if($this->contentForm !== null) {
+		if($this->container !== null) {
 			throw new InvalidStateException('Method ' . __METHOD__ . ' is intended for initialization and should not be called more than once.');
 		}
 
-		$this->contentForm = $contentForm;
+		$this->container = $container;
 	}
 
 
@@ -60,7 +60,7 @@ abstract class Renderer extends Control
 
 		if ($component instanceof Panel) {
 			// FORM SETUP
-			$component->setupForm($this->getContentForm());
+			$component->setupForm($this->getContainer());
 		}
 
 		return $this;
