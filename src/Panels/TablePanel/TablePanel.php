@@ -40,9 +40,19 @@ abstract class TablePanel extends Panel
 	private $title;
 
 	/**
-	 * @var integer
+	 * @var int
 	 */
 	private $limit = 50;
+
+	/**
+	 * @var string
+	 */
+	private $defaultSort = 'id';
+
+	/**
+	 * @var string
+	 */
+	private $defaultOrder = 'ASC';
 
 	/**
 	 * @var array
@@ -65,7 +75,7 @@ abstract class TablePanel extends Panel
 	public $onQueryCreate = [];
 
 	/**
-	 * @var integer
+	 * @var int
 	 * @persistent
 	 */
 	public $page = 1;
@@ -74,13 +84,13 @@ abstract class TablePanel extends Panel
 	 * @var string
 	 * @persistent
 	 */
-	public $sort = 'id';
+	public $sort;
 
 	/**
 	 * @var string
 	 * @persistent
 	 */
-	public $order = 'ASC';
+	public $order = self::ORDER_ASC;
 
 	const ORDER_ASC = 'ASC';
 	const ORDER_DESC = 'DESC';
@@ -179,6 +189,70 @@ abstract class TablePanel extends Panel
 	}
 
 
+	/**
+	 * @param string $row
+	 *
+	 * @return array
+	 */
+	public function getActions($row)
+	{
+		$actions = [];
+
+		foreach ($this->actions as $action) {
+			/** @var Action $action */
+			if (!empty($action->getLink($row))) {
+				$actions[] = $action;
+			}
+		}
+
+		return $actions;
+	}
+
+
+	/**
+	 * @param string $sort
+	 */
+	public function setDefaultSort($sort)
+	{
+		$this->defaultSort = $sort;
+	}
+
+
+	/**
+	 * @param string $order
+	 */
+	public function setDefaultOrder($order)
+	{
+		if(in_array(strtoupper($order), [self::ORDER_ASC, self::ORDER_DESC])) {
+			$this->defaultOrder = strtoupper($order);
+		} else {
+			throw new InvalidArgumentException('Argument order must have a value ' . self::ORDER_ASC . ' or ' . self::ORDER_DESC . '.');
+		}
+	}
+
+
+	/**
+	 * @return string
+	 */
+	private function getSort()
+	{
+		if(!in_array($this->order, [self::ORDER_ASC, self::ORDER_DESC])) {
+			$this->order = self::ORDER_ASC;
+		}
+
+		return (empty($this->sort) && $this->order == self::ORDER_ASC) ? $this->defaultSort : $this->sort;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	private function getOrder()
+	{
+		return (empty($this->sort) && $this->order == self::ORDER_ASC) ? $this->defaultOrder : $this->order;
+	}
+
+
 	public function render()
 	{
 		$this->template->setFile(__DIR__ . '/TablePanel.latte');
@@ -194,7 +268,7 @@ abstract class TablePanel extends Panel
 		$paginator->setPage($this->page);
 		$paginator->setItemCount((new \Doctrine\ORM\Tools\Pagination\Paginator($this->queryBuilder))->count());
 
-		$this->queryBuilder->orderBy($this->queryBuilder->getDQLPart('from')[0]->getAlias() . '.' . $this->sort, $this->order);
+		$this->queryBuilder->orderBy($this->queryBuilder->getDQLPart('from')[0]->getAlias() . '.' . $this->getSort(), $this->getOrder());
 		$this->queryBuilder->setMaxResults($paginator->getItemsPerPage());
 		$this->queryBuilder->setFirstResult(($paginator->getItemsPerPage() * $paginator->getPage()) - $paginator->getItemsPerPage());
 
@@ -207,21 +281,6 @@ abstract class TablePanel extends Panel
 		$this->template->paginator = $paginator;
 
 		$this->template->render();
-	}
-
-
-	public function getActions($row)
-	{
-		$actions = [];
-
-		foreach ($this->actions as $action) {
-			/** @var Action $action */
-			if (!empty($action->getLink($row))) {
-				$actions[] = $action;
-			}
-		}
-
-		return $actions;
 	}
 
 }
