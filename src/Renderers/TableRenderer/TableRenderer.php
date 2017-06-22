@@ -38,11 +38,11 @@ class TableRenderer extends Renderer
 	}
 
 
-	public function beforeRender()
+	public function startup()
 	{
-		parent::beforeRender();
+		parent::startup();
 
-		$this->panel->injectPrimary($this->entityManager);
+		$this->panel->injectPanel($this->entityManager);
 
 		$this->addComponent($this->panel, 'panel');
 	}

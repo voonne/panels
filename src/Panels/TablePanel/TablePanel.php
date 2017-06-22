@@ -96,7 +96,7 @@ abstract class TablePanel extends Panel
 	const ORDER_DESC = 'DESC';
 
 
-	public function injectPrimary(EntityManagerInterface $entityManager)
+	public function injectPanel(EntityManagerInterface $entityManager)
 	{
 		if($this->entityManager !== null) {
 			throw new InvalidStateException('Method ' . __METHOD__ . ' is intended for initialization and should not be called more than once.');

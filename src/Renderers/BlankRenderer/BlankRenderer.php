@@ -31,9 +31,9 @@ class BlankRenderer extends Renderer
 	}
 
 
-	public function beforeRender()
+	public function startup()
 	{
-		parent::beforeRender();
+		parent::startup();
 
 		$this->addComponent($this->panel, 'panel');
 	}

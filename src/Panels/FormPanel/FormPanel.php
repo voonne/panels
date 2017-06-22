@@ -10,17 +10,21 @@
 
 namespace Voonne\Panels\Panels\FormPanel;
 
-use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
+use Voonne\Forms\Container;
 use Voonne\Forms\Form;
-use Voonne\Panels\InvalidArgumentException;
 use Voonne\Panels\InvalidStateException;
 use Voonne\Panels\Panels\Panel;
-use Voonne\Voonne\Content\ContentForm;
 
 
 abstract class FormPanel extends Panel
 {
+
+	/**
+	 * @var Container
+	 */
+	private $container;
+
 
 	/**
 	 * @var string
@@ -29,9 +33,16 @@ abstract class FormPanel extends Panel
 
 
 	/**
-	 * @var Container
+	 * @param Container $container
 	 */
-	private $container;
+	public function injectPanel(Container $container)
+	{
+		if($this->container !== null) {
+			throw new InvalidStateException('Method ' . __METHOD__ . ' is intended for initialization and should not be called more than once.');
+		}
+
+		$this->container = $container;
+	}
 
 
 	/**
@@ -49,19 +60,6 @@ abstract class FormPanel extends Panel
 	public function setTitle($title)
 	{
 		$this->title = $title;
-	}
-
-
-	/**
-	 * @param Container $container
-	 */
-	public function injectPrimary(Container $container)
-	{
-		if($this->container !== null) {
-			throw new InvalidStateException('Method ' . __METHOD__ . ' is intended for initialization and should not be called more than once.');
-		}
-
-		$this->container = $container;
 	}
 
 

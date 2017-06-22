@@ -31,11 +31,11 @@ class FormRenderer extends Renderer
 	}
 
 
-	public function beforeRender()
+	public function startup()
 	{
-		parent::beforeRender();
+		parent::startup();
 
-		$this->panel->injectPrimary($this->getContainer());
+		$this->panel->injectPanel($this->getContainer());
 
 		$this->addComponent($this->panel, 'panel');
 	}

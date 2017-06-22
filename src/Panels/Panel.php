@@ -12,10 +12,40 @@ namespace Voonne\Panels\Panels;
 
 use Voonne\Controls\Control;
 use Voonne\Forms\Container;
+use Voonne\Panels\InvalidStateException;
+use Voonne\Security\User;
 
 
 abstract class Panel extends Control
 {
+
+	/**
+	 * @var User
+	 */
+	private $user;
+
+
+	/**
+	 * @param User
+	 */
+	public function injectPrimary(User $user)
+	{
+		if($this->user !== null) {
+			throw new InvalidStateException('Method ' . __METHOD__ . ' is intended for initialization and should not be called more than once.');
+		}
+
+		$this->user = $user;
+	}
+
+
+	/**
+	 * @return User
+	 */
+	public function getUser()
+	{
+		return $this->user;
+	}
+
 
 	/**
 	 * Adjusted ContentFrom for use in a panel.
