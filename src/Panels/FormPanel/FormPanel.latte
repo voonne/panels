@@ -8,9 +8,8 @@
 
 {include #container, component => $container}
 
-<div class="panel-footer">
-	{foreach $container->getComponents() as $component}
-		{continueIf !($component instanceof Voonne\Forms\Controls\SubmitButton)}
+<div class="panel-footer" n:if="$control->getButtons($container->getComponents())">
+	{foreach $control->getButtons($container->getComponents()) as $component}
 		{var $name = $control->getFullName($component)}
 
 		{input $name, class => 'btn btn-primary pull-right'}

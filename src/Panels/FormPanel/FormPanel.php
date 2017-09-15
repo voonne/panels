@@ -12,6 +12,7 @@ namespace Voonne\Panels\Panels\FormPanel;
 
 use Nette\Forms\Controls\BaseControl;
 use Voonne\Forms\Container;
+use Voonne\Forms\Controls\SubmitButton;
 use Voonne\Forms\Form;
 use Voonne\Panels\InvalidStateException;
 use Voonne\Panels\Panels\Panel;
@@ -70,6 +71,20 @@ abstract class FormPanel extends Panel
 		$this->template->container = $this->container;
 
 		$this->template->render();
+	}
+
+
+	public function getButtons($components)
+	{
+		$result = [];
+
+		foreach ($components as $component) {
+			if ($component instanceof SubmitButton) {
+				$result[] = $component;
+			}
+		}
+
+		return $result;
 	}
 
 
