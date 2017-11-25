@@ -18,25 +18,13 @@ class TableRendererFactory
 {
 
 	/**
-	 * @var EntityManagerInterface
-	 */
-	private $entityManager;
-
-
-	public function __construct(EntityManagerInterface $entityManager)
-	{
-		$this->entityManager = $entityManager;
-	}
-
-
-	/**
 	 * @param TablePanel $panel
 	 *
 	 * @return TableRenderer
 	 */
 	public function create(TablePanel $panel)
 	{
-		return new TableRenderer($this->entityManager, $panel);
+		return new TableRenderer($panel);
 	}
 
 }

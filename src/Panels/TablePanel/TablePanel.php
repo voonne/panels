@@ -10,13 +10,11 @@
 
 namespace Voonne\Panels\Panels\TablePanel;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\QueryBuilder;
 use Nette\Utils\Paginator;
 use Voonne\Panels\FileNotFoundException;
 use Voonne\Panels\InvalidArgumentException;
-use Voonne\Panels\InvalidStateException;
 use Voonne\Panels\Panels\Panel;
+use Voonne\Panels\Panels\TablePanel\Adapters\IAdapter;
 use Voonne\Panels\Panels\TablePanel\Controls\Action;
 use Voonne\Panels\Panels\TablePanel\Controls\Column;
 
@@ -25,14 +23,9 @@ abstract class TablePanel extends Panel
 {
 
 	/**
-	 * @var EntityManagerInterface
+	 * @var IAdapter
 	 */
-	private $entityManager;
-
-	/**
-	 * @var QueryBuilder
-	 */
-	private $queryBuilder;
+	private $adapter;
 
 	/**
 	 * @var string
@@ -70,11 +63,6 @@ abstract class TablePanel extends Panel
 	private $customTemplates = [];
 
 	/**
-	 * @var array
-	 */
-	public $onQueryCreate = [];
-
-	/**
 	 * @var int
 	 * @persistent
 	 */
@@ -96,14 +84,15 @@ abstract class TablePanel extends Panel
 	const ORDER_DESC = 'DESC';
 
 
-	public function injectPanel(EntityManagerInterface $entityManager)
+	/**
+	 * @param IAdapter $adapter
+	 */
+	public function setAdapter(IAdapter $adapter)
 	{
-		if($this->entityManager !== null) {
-			throw new InvalidStateException('Method ' . __METHOD__ . ' is intended for initialization and should not be called more than once.');
-		}
+		$this->adapter = $adapter;
 
-		$this->entityManager = $entityManager;
-		$this->queryBuilder = $entityManager->createQueryBuilder();
+		$this->adapter->setLimit($this->limit);
+		$this->adapter->setOffset(($this->limit * $this->page) - $this->limit);
 	}
 
 
@@ -140,6 +129,11 @@ abstract class TablePanel extends Panel
 	public function setLimit($limit)
 	{
 		$this->limit = $limit;
+
+		if ($this->adapter instanceof IAdapter) {
+			$this->adapter->setLimit($this->limit);
+			$this->adapter->setOffset(($this->limit * $this->page) - $this->limit);
+		}
 	}
 
 
@@ -257,27 +251,17 @@ abstract class TablePanel extends Panel
 	{
 		$this->template->setFile(__DIR__ . '/TablePanel.latte');
 
-		$this->onQueryCreate($this->queryBuilder);
-
-		if (!isset($this->queryBuilder->getDQLPart('from')[0])) {
-			throw new InvalidArgumentException('From statement must be declared in QueryBuilder.');
-		}
-
 		$paginator = new Paginator();
 		$paginator->setItemsPerPage($this->limit);
 		$paginator->setPage($this->page);
-		$paginator->setItemCount((new \Doctrine\ORM\Tools\Pagination\Paginator($this->queryBuilder))->count());
-
-		$this->queryBuilder->orderBy($this->queryBuilder->getDQLPart('from')[0]->getAlias() . '.' . $this->getSort(), $this->getOrder());
-		$this->queryBuilder->setMaxResults($paginator->getItemsPerPage());
-		$this->queryBuilder->setFirstResult(($paginator->getItemsPerPage() * $paginator->getPage()) - $paginator->getItemsPerPage());
+		$paginator->setItemCount($this->adapter->getCount());
 
 		$this->template->columns = $this->columns;
 		$this->template->actions = $this->actions;
 		$this->template->sort = $this->sort;
 		$this->template->order = $this->order;
 		$this->template->customTemplates = $this->customTemplates;
-		$this->template->rows = $this->queryBuilder->getQuery()->getResult();
+		$this->template->rows = $this->adapter->getResults($this->getSort(), $this->getOrder());
 		$this->template->paginator = $paginator;
 
 		$this->template->render();

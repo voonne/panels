@@ -93,12 +93,12 @@ class Column
 	 */
 	public function getContent($row)
 	{
-		$name = 'get' . ucfirst($this->name);
-
-		if (method_exists($row, $name)) {
-			return $row->{$name}();
+		if (method_exists($row, 'get' . ucfirst($this->name))) {
+			return $row->{'get' . ucfirst($this->name)}();
+		} else if (isset($row->{$this->name})) {
+			return $row->{$this->name};
 		} else {
-			throw new InvalidStateException('Method $object->' .$name . '() was not found on row object.');
+			throw new InvalidStateException('Method $object->get' . ucfirst($this->name) . '() or field $object->' . $this->name . ' was not found on row object.');
 		}
 	}
 

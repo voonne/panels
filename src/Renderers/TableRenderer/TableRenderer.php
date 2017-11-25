@@ -10,7 +10,6 @@
 
 namespace Voonne\Panels\Renderers\TableRenderer;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Voonne\Panels\Panels\TablePanel\TablePanel;
 use Voonne\Panels\Renderers\Renderer;
 
@@ -19,21 +18,15 @@ class TableRenderer extends Renderer
 {
 
 	/**
-	 * @var EntityManagerInterface
-	 */
-	private $entityManager;
-
-	/**
 	 * @var TablePanel
 	 */
 	private $panel;
 
 
-	public function __construct(EntityManagerInterface $entityManager, TablePanel $panel)
+	public function __construct(TablePanel $panel)
 	{
 		parent::__construct();
 
-		$this->entityManager = $entityManager;
 		$this->panel = $panel;
 	}
 
@@ -41,8 +34,6 @@ class TableRenderer extends Renderer
 	public function startup()
 	{
 		parent::startup();
-
-		$this->panel->injectPanel($this->entityManager);
 
 		$this->addComponent($this->panel, 'panel');
 	}
