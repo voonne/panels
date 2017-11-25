@@ -61,6 +61,33 @@ class PanelManager
 
 
 	/**
+	 * @param Panel $panel
+	 */
+	public function removePanel(Panel $panel)
+	{
+		$name = Strings::firstLower((new ReflectionClass($panel))->getShortName());
+
+		foreach ($this->panels['priorities'] as $priorityName => $priority) {
+			foreach ($priority as $panelName => $panel) {
+				if ($name == $panelName) {
+					unset($this->panels['priorities'][$priorityName][$panelName]);
+				}
+			}
+		}
+
+		foreach ($this->panels['tags'] as $tagName => $tags) {
+			foreach ($tags as $priorityName => $priority) {
+				foreach ($priority as $panelName => $panel) {
+					if ($name == $panelName) {
+						unset($this->panels['tags'][$tagName][$priorityName][$panelName]);
+					}
+				}
+			}
+		}
+	}
+
+
+	/**
 	 * @param string $tag
 	 *
 	 * @return array

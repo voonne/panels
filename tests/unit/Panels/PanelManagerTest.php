@@ -53,8 +53,8 @@ class PanelManagerTest extends Unit
 		$this->panelManager->addPanel($panel2, [Layout::POSITION_CENTER], 110);
 
 		$this->assertEquals([
-			$name2 => $panel2,
-			$name1 => $panel1
+			$name1 => $panel1,
+			$name2 => $panel2
 		], $this->panelManager->getPanels());
 	}
 
@@ -67,6 +67,23 @@ class PanelManagerTest extends Unit
 
 		$this->expectException(DuplicateEntryException::class);
 		$this->panelManager->addPanel($panel, [Layout::POSITION_CENTER]);
+	}
+
+
+	public function testRemovePanel()
+	{
+		$panel1 = Mockery::mock(BasicPanel::class);
+		$panel2 = Mockery::mock(BlankPanel::class);
+
+		$name1 = Strings::firstLower((new ReflectionClass($panel1))->getShortName());
+		$name2 = Strings::firstLower((new ReflectionClass($panel2))->getShortName());
+
+		$this->panelManager->addPanel($panel1, [Layout::POSITION_CENTER]);
+		$this->panelManager->addPanel($panel2, [Layout::POSITION_CENTER]);
+
+		$this->panelManager->removePanel($panel2);
+
+		$this->assertEquals([$name1 => $panel1], $this->panelManager->getPanels());
 	}
 
 
