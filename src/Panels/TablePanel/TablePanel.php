@@ -260,23 +260,32 @@ abstract class TablePanel extends Panel
 	/**
 	 * @return bool
 	 */
-	public function hasFilterAndAction()
+	public function hasFilters()
 	{
-		$hasFilters = false;
-		$hasActions = !empty($this->actions);
-
 		foreach ($this->columns as $column) {
 			/** @var Column $column */
 
 			if ($column->getFilter()) {
-				$hasFilters = true;
+				return true;
 			}
 		}
 
-		return ($hasFilters && $hasActions) || ($hasFilters && !$hasActions);
+		return false;
 	}
 
 
+	/**
+	 * @return bool
+	 */
+	public function hasActions()
+	{
+		return !empty($this->actions);
+	}
+
+
+	/**
+	 * @return array
+	 */
 	private function getFilters()
 	{
 		$filter = unserialize($this->filters);

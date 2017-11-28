@@ -27,9 +27,9 @@
 						{$column->getLabel()|translate}
 					{/if}
 				</th>
-				<th n:if="$control->hasFilterAndAction()" class="table-panel__action">Akce</th>
+				<th n:if="$control->hasFilters() || $control->hasActions()" class="table-panel__action">Akce</th>
 			</tr>
-			<tr n:if="$control->hasFilterAndAction()">
+			<tr n:if="$control->hasFilters()">
 				<th n:foreach="$columns as $column">
 					{if $column->getFilter()}
 						{var $input = $container . '-' . $column->getName()}
@@ -51,7 +51,7 @@
 						{$column->getContent($row)|translate}
 					{/if}
 				</td>
-				<td n:if="$control->hasFilterAndAction()">
+				<td n:if="$control->hasFilters() || $control->hasActions()">
 					<div class="btn-group" n:if="count($control->getActions($row)) != 0">
 						<a href="{array_values($control->getActions($row))[0]->getLink($row)}" class="btn btn-default">
 							{array_values($control->getActions($row))[0]->getLabel()|translate}
