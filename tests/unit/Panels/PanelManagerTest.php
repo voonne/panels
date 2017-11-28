@@ -76,7 +76,6 @@ class PanelManagerTest extends Unit
 		$panel2 = Mockery::mock(BlankPanel::class);
 
 		$name1 = Strings::firstLower((new ReflectionClass($panel1))->getShortName());
-		$name2 = Strings::firstLower((new ReflectionClass($panel2))->getShortName());
 
 		$this->panelManager->addPanel($panel1, [Layout::POSITION_CENTER]);
 		$this->panelManager->addPanel($panel2, [Layout::POSITION_CENTER]);

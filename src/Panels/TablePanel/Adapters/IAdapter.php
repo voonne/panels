@@ -20,9 +20,9 @@ interface IAdapter
 	public function setOffset($offset);
 
 
-	public function getResults($sort, $order);
+	public function getResults($filters, $sort, $order);
 
 
-	public function getCount();
+	public function getCount($filters);
 
 }

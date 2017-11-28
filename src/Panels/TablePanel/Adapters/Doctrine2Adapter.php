@@ -56,7 +56,7 @@ class Doctrine2Adapter implements IAdapter
 	}
 
 
-	public function getResults($sort, $order)
+	public function getResults($filters, $sort, $order)
 	{
 		if (!isset($this->queryBuilder->getDQLPart('from')[0])) {
 			throw new InvalidArgumentException('From statement must be declared in QueryBuilder.');
@@ -70,18 +70,32 @@ class Doctrine2Adapter implements IAdapter
 			throw new InvalidStateException('Property offset must be set.');
 		}
 
-		$this->queryBuilder->setMaxResults($this->limit);
-		$this->queryBuilder->setFirstResult($this->offset);
+		$queryBuilder = clone $this->queryBuilder;
 
-		$this->queryBuilder->orderBy($this->queryBuilder->getDQLPart('from')[0]->getAlias() . '.' . $sort, $order);
+		foreach ($filters as $name => $value) {
+			$queryBuilder->where($queryBuilder->getDQLPart('from')[0]->getAlias() . '.' . $name . ' LIKE :' . $name)
+				->setParameter($name, '%' . $value . '%');
+		}
 
-		return $this->queryBuilder->getQuery()->getResult();
+		$queryBuilder->orderBy($queryBuilder->getDQLPart('from')[0]->getAlias() . '.' . $sort, $order);
+
+		$queryBuilder->setMaxResults($this->limit);
+		$queryBuilder->setFirstResult($this->offset);
+
+		return $queryBuilder->getQuery()->getResult();
 	}
 
 
-	public function getCount()
+	public function getCount($filters)
 	{
-		return (new Paginator($this->queryBuilder))->count();
+		$queryBuilder = clone $this->queryBuilder;
+
+		foreach ($filters as $name => $value) {
+			$queryBuilder->where($queryBuilder->getDQLPart('from')[0]->getAlias() . '.' . $name . ' = :' . $name)
+				->setParameter($name, $value);
+		}
+
+		return (new Paginator($queryBuilder))->count();
 	}
 
 }

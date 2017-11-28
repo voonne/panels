@@ -54,7 +54,7 @@ class ArrayAdapter implements IAdapter
 	}
 
 
-	public function getResults($sort, $order)
+	public function getResults($filters, $sort, $order)
 	{
 		if(!isset($this->limit)) {
 			throw new InvalidStateException('Property limit must be set.');
@@ -64,7 +64,15 @@ class ArrayAdapter implements IAdapter
 			throw new InvalidStateException('Property offset must be set.');
 		}
 
-		usort($this->data, function ($a, $b) use ($sort, $order) {
+		$data = $this->data;
+
+		foreach ($filters as $name => $value) {
+			$data = array_filter($data, function ($item) use ($name, $value) {
+				return is_int(strpos($item->{$name}, $value));
+			});
+		}
+
+		usort($data, function ($a, $b) use ($sort, $order) {
 			if ($a->{$sort} == $b->{$sort}) {
 				return 0;
 			} else if (($order == TablePanel::ORDER_ASC && $a->{$sort} < $b->{$sort}) || ($order == TablePanel::ORDER_DESC && $a->{$sort} > $b->{$sort})) {
@@ -74,13 +82,21 @@ class ArrayAdapter implements IAdapter
 			}
 		});
 
-		return array_slice($this->data, $this->offset, $this->limit);
+		return array_slice($data, $this->offset, $this->limit);
 	}
 
 
-	public function getCount()
+	public function getCount($filters)
 	{
-		return count($this->data);
+		$data = $this->data;
+
+		foreach ($filters as $name => $value) {
+			$data = array_filter($data, function ($item) use ($name, $value) {
+				return is_int(strpos($item->{$name}, $value));
+			});
+		}
+
+		return count($data);
 	}
 
 }

@@ -36,6 +36,11 @@ class Column
 	private $sortable = true;
 
 	/**
+	 * @var Filter|null
+	 */
+	private $filter;
+
+	/**
 	 * @var string|null
 	 */
 	private $template;
@@ -72,6 +77,15 @@ class Column
 	public function isSortable()
 	{
 		return $this->sortable;
+	}
+
+
+	/**
+	 * @return Filter|null
+	 */
+	public function getFilter()
+	{
+		return $this->filter;
 	}
 
 
@@ -120,6 +134,22 @@ class Column
 	public function disableSorting()
 	{
 		$this->sortable = false;
+
+		return $this;
+	}
+
+
+	/**
+	 * @param string $type
+	 * @param array|null $items
+	 *
+	 * @return $this
+	 *
+	 * @throws InvalidArgumentException
+	 */
+	public function enableFilter($type, array $items = null)
+	{
+		$this->filter = new Filter($type, $items);
 
 		return $this;
 	}

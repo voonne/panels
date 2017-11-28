@@ -11,12 +11,16 @@
 namespace Voonne\Panels\Panels\TablePanel;
 
 use Nette\Utils\Paginator;
+use Nette\Utils\Strings;
+use ReflectionClass;
+use Voonne\Forms\Container;
 use Voonne\Panels\FileNotFoundException;
 use Voonne\Panels\InvalidArgumentException;
 use Voonne\Panels\Panels\Panel;
 use Voonne\Panels\Panels\TablePanel\Adapters\IAdapter;
 use Voonne\Panels\Panels\TablePanel\Controls\Action;
 use Voonne\Panels\Panels\TablePanel\Controls\Column;
+use Voonne\Panels\Panels\TablePanel\Controls\Filter;
 
 
 abstract class TablePanel extends Panel
@@ -79,6 +83,12 @@ abstract class TablePanel extends Panel
 	 * @persistent
 	 */
 	public $order = self::ORDER_ASC;
+
+	/**
+	 * @var string
+	 * @persistent
+	 */
+	public $filters;
 
 	const ORDER_ASC = 'ASC';
 	const ORDER_DESC = 'DESC';
@@ -247,24 +257,112 @@ abstract class TablePanel extends Panel
 	}
 
 
+	/**
+	 * @return bool
+	 */
+	public function hasFilterOrAction()
+	{
+		if (!empty($this->actions)) {
+			return true;
+		}
+
+		foreach ($this->columns as $column) {
+			/** @var Column $column */
+
+			if ($column->getFilter()) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
+	private function getFilters()
+	{
+		$filter = unserialize($this->filters);
+
+		if ($filter) {
+			return $filter;
+		} else {
+			return [];
+		}
+	}
+
+
 	public function render()
 	{
 		$this->template->setFile(__DIR__ . '/TablePanel.latte');
 
+		$filter = $this->getFilters();
+
 		$paginator = new Paginator();
 		$paginator->setItemsPerPage($this->limit);
 		$paginator->setPage($this->page);
-		$paginator->setItemCount($this->adapter->getCount());
+		$paginator->setItemCount($this->adapter->getCount($filter));
 
 		$this->template->columns = $this->columns;
 		$this->template->actions = $this->actions;
 		$this->template->sort = $this->sort;
 		$this->template->order = $this->order;
 		$this->template->customTemplates = $this->customTemplates;
-		$this->template->rows = $this->adapter->getResults($this->getSort(), $this->getOrder());
+		$this->template->rows = $this->adapter->getResults($filter, $this->getSort(), $this->getOrder());
 		$this->template->paginator = $paginator;
+		$this->template->container = Strings::firstLower((new ReflectionClass($this))->getShortName());
 
 		$this->template->render();
+	}
+
+
+	public function setupForm(Container $container)
+	{
+		$filter = $this->getFilters();
+
+		foreach ($this->columns as $column) {
+			/** @var Column $column */
+
+			if ($column->getFilter()) {
+				switch ($column->getFilter()->getType()) {
+					case Filter::TYPE_TEXT:
+						$container->addText($column->getName())
+							->setDefaultValue(isset($filter[$column->getName()]) ? $filter[$column->getName()] : null);
+
+						break;
+					case Filter::TYPE_SELECT:
+						$container->addSelect($column->getName(), null, $column->getFilter()->getItems())
+							->setPrompt('')
+							->setDefaultValue(isset($filter[$column->getName()]) ? $filter[$column->getName()] : null);
+
+						break;
+				}
+			}
+		}
+
+		$container->addSubmit('submit', 'Hledat');
+
+		$container->onSuccess[] = [$this, 'success'];
+	}
+
+
+	public function success(Container $container, $values)
+	{
+		$filter = [];
+
+		foreach ($this->columns as $column) {
+			/** @var Column $column */
+
+			if ($column->getFilter() && !empty($values->{$column->getName()})) {
+				$filter[$column->getName()] = $values->{$column->getName()};
+			}
+		}
+
+		if(!empty($filter)) {
+			$this->filters = serialize($filter);
+		} else {
+			$this->filters = null;
+		}
+
+		$this->redirect('this');
 	}
 
 }
