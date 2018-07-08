@@ -27,6 +27,7 @@
 						{$column->getLabel()|translate}
 					{/if}
 				</th>
+
 				<th n:if="$control->hasFilters() || $control->hasActions()" class="table-panel__action">Akce</th>
 			</tr>
 			<tr n:if="$control->hasFilters()">
@@ -36,14 +37,16 @@
 						{input $input, class => 'form-control'}
 					{/if}
 				</th>
+
 				<th>
 					{var $submit = $container . '-submit'}
 					{input $submit, class => 'btn btn-default'}
 				</th>
 			</tr>
 		</thead>
+
 		<tbody>
-			<tr n:foreach="$rows as $row">
+			<tr n:foreach="$rows as $row"{if $primaryAction && $primaryAction($row)} data-link="{$primaryAction($row)}"{/if}>
 				<td n:foreach="$columns as $column">
 					{if !empty($column->getTemplate())}
 						{include #$column->getTemplate(), row => $row}
@@ -51,15 +54,18 @@
 						{(string)$column->getContent($row)|translate}
 					{/if}
 				</td>
-				<td n:if="$control->hasFilters() || $control->hasActions()">
+
+				<th n:if="$control->hasFilters() || $control->hasActions()">
 					<div class="btn-group" n:if="count($control->getActions($row)) != 0">
 						<a href="{array_values($control->getActions($row))[0]->getLink($row)}" class="btn btn-default">
 							{array_values($control->getActions($row))[0]->getLabel()|translate}
 						</a>
+
 						{if count($control->getActions($row)) > 1}
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 							<span class="caret"></span>
 						</button>
+
 						<ul class="dropdown-menu">
 							<li n:foreach="array_values($control->getActions($row)) as $action">
 								{continueIf $iterator->counter == 1}
@@ -68,7 +74,7 @@
 						</ul>
 						{/if}
 					</div>
-				</td>
+				</th>
 			</tr>
 		</tbody>
 	</table>
@@ -79,6 +85,7 @@
 			<li class="disabled">
 				<a href="#"><i class="fa fa-angle-double-left"></i></a>
 			</li>
+
 			<li class="disabled">
 				<a href="#"><i class="fa fa-angle-left"></i></a>
 			</li>
@@ -86,6 +93,7 @@
 			<li>
 				<a n:href="this, page => 1"><i class="fa fa-angle-double-left"></i></a>
 			</li>
+
 			<li>
 				<a n:href="this, page => $paginator->getPage() - 1"><i class="fa fa-angle-left"></i></a>
 			</li>
@@ -98,15 +106,19 @@
 			<li n:if="($paginator->getPage() - 2) >= 1">
 				<a n:href="this, page => $paginator->getPage() - 2">{$paginator->getPage() - 2}</a>
 			</li>
+
 			<li n:if="($paginator->getPage() - 1) >= 1">
 				<a n:href="this, page => $paginator->getPage() - 1">{$paginator->getPage() - 1}</a>
 			</li>
+
 			<li class="active">
 				<a n:href="this, page => $paginator->getPage()">{$paginator->getPage()}</a>
 			</li>
+
 			<li n:if="($paginator->getPage() + 1) <= $paginator->getPageCount()">
 				<a n:href="this, page => $paginator->getPage() + 1">{$paginator->getPage() + 1}</a>
 			</li>
+
 			<li n:if="($paginator->getPage() + 2) <= $paginator->getPageCount()">
 				<a n:href="this, page => $paginator->getPage() + 2">{$paginator->getPage() + 2}</a>
 			</li>
@@ -119,6 +131,7 @@
 			<li class="disabled">
 				<a href="#"><i class="fa fa-angle-right"></i></a>
 			</li>
+
 			<li class="disabled">
 				<a href="#"><i class="fa fa-angle-double-right"></i></a>
 			</li>
@@ -126,6 +139,7 @@
 			<li>
 				<a n:href="this, page => $paginator->getPage() + 1"><i class="fa fa-angle-right"></i></a>
 			</li>
+
 			<li>
 				<a n:href="this, page => $paginator->getPageCount()"><i class="fa fa-angle-double-right"></i></a>
 			</li>

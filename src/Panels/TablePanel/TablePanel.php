@@ -37,7 +37,7 @@ abstract class TablePanel extends Panel
 	private $title;
 
 	/**
-	 * @var int
+	 * @var integer
 	 */
 	private $limit = 50;
 
@@ -67,7 +67,12 @@ abstract class TablePanel extends Panel
 	private $customTemplates = [];
 
 	/**
-	 * @var int
+	 * @var callable|null
+	 */
+	private $primaryAction;
+
+	/**
+	 * @var integer
 	 * @persistent
 	 */
 	public $page = 1;
@@ -236,6 +241,15 @@ abstract class TablePanel extends Panel
 
 
 	/**
+	 * @param callable $callback
+	 */
+	public function setPrimaryAction(callable $callback)
+	{
+		$this->primaryAction = $callback;
+	}
+
+
+	/**
 	 * @return string
 	 */
 	private function getSort()
@@ -258,7 +272,7 @@ abstract class TablePanel extends Panel
 
 
 	/**
-	 * @return bool
+	 * @return boolean
 	 */
 	public function hasFilters()
 	{
@@ -275,7 +289,7 @@ abstract class TablePanel extends Panel
 
 
 	/**
-	 * @return bool
+	 * @return boolean
 	 */
 	public function hasActions()
 	{
@@ -314,6 +328,7 @@ abstract class TablePanel extends Panel
 		$this->template->sort = $this->sort;
 		$this->template->order = $this->order;
 		$this->template->customTemplates = $this->customTemplates;
+		$this->template->primaryAction = $this->primaryAction;
 		$this->template->rows = $this->adapter->getResults($filter, $this->getSort(), $this->getOrder());
 		$this->template->paginator = $paginator;
 		$this->template->container = Strings::firstLower((new ReflectionClass($this))->getShortName());
