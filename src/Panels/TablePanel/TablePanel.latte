@@ -48,7 +48,7 @@
 					{if !empty($column->getTemplate())}
 						{include #$column->getTemplate(), row => $row}
 					{else}
-						{$column->getContent($row)|translate}
+						{(string)$column->getContent($row)|translate}
 					{/if}
 				</td>
 				<td n:if="$control->hasFilters() || $control->hasActions()">
