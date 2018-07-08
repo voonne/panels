@@ -72,9 +72,28 @@ class Doctrine2Adapter implements IAdapter
 
 		$queryBuilder = clone $this->queryBuilder;
 
+		$metadata = $this->queryBuilder->getEntityManager()
+			->getClassMetadata($this->queryBuilder->getDQLPart('from')[0]->getFrom());
+
 		foreach ($filters as $name => $value) {
-			$queryBuilder->where($queryBuilder->getDQLPart('from')[0]->getAlias() . '.' . $name . ' LIKE :' . $name)
+			if (isset($metadata->associationMappings[$name])) {
+				$queryBuilder->where(sprintf(
+					'%s.%s = (SELECT u FROM %s u WHERE u.id = :%s)',
+					$queryBuilder->getDQLPart('from')[0]->getAlias(),
+					$name,
+					$metadata->associationMappings[$name]['targetEntity'],
+					$name
+				))
+				->setParameter($name, $value);
+			} else {
+				$queryBuilder->where(sprintf(
+					'%s.%s LIKE :%s',
+					$queryBuilder->getDQLPart('from')[0]->getAlias(),
+					$name,
+					$name
+				))
 				->setParameter($name, '%' . $value . '%');
+			}
 		}
 
 		$queryBuilder->orderBy($queryBuilder->getDQLPart('from')[0]->getAlias() . '.' . $sort, $order);
