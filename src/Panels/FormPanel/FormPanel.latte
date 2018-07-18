@@ -30,9 +30,10 @@
 		{elseif $component instanceof Voonne\Forms\Controls\TextInput || $component instanceof Voonne\Forms\Controls\Password}
 			{var $name = $control->getFullName($component)}
 
-			<div class="form-group{if $component->hasErrors()} has-error{/if}">
-				<label n:name="$name" class="col-sm-3 control-label">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
-				<div class="col-sm-9 col-xs-12">
+			<div n:class="'form-group', $component->hasErrors() ? 'has-error'">
+				<label n:name="$name" n:class="'control-label', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-3' : 'col-xs-12'">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
+
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9'">
 					<div class="input-group">
 						<div class="input-group-addon" n:ifcontent>{$component->getPrefix()}</div>
 						{input $name, class => 'form-control'}
@@ -40,7 +41,7 @@
 					</div>
 				</div>
 
-				<div class="col-sm-9 col-xs-12 col-sm-offset-3">
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9 col-sm-offset-3'">
 					<span class="help-block error-block" n:ifcontent>{$component->getError()|translate}</span>
 					<span class="help-block" n:ifcontent>{$component->getDescription()|translate}</span>
 				</div>
@@ -48,13 +49,14 @@
 		{elseif $component instanceof Voonne\Forms\Controls\TextArea}
 			{var $name = $control->getFullName($component)}
 
-			<div class="form-group{if $component->hasErrors()} has-error{/if}">
-				<label n:name="$name" class="col-sm-3 control-label">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
-				<div class="col-sm-9 col-xs-12">
+			<div n:class="'form-group', $component->hasErrors() ? 'has-error'">
+				<label n:name="$name" n:class="'control-label', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-3' : 'col-xs-12'">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
+
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9'">
 					{input $name, class => 'form-control'}
 				</div>
 
-				<div class="col-sm-9 col-xs-12 col-sm-offset-3">
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9 col-sm-offset-3'">
 					<span class="help-block error-block" n:ifcontent>{$component->getError()|translate}</span>
 					<span class="help-block" n:ifcontent>{$component->getDescription()|translate}</span>
 				</div>
@@ -62,9 +64,10 @@
 		{elseif $component instanceof Voonne\Forms\Controls\UploadControl}
 			{var $name = $control->getFullName($component)}
 
-			<div class="form-group{if $component->hasErrors()} has-error{/if}">
-				<label n:name="$name" class="col-sm-3 control-label">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
-				<div class="col-sm-9 col-xs-12">
+			<div n:class="'form-group', $component->hasErrors() ? 'has-error'">
+				<label n:name="$name" n:class="'control-label', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-3' : 'col-xs-12'">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
+
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9'">
 					<div class="input-group">
 						<div class="input-group-addon" n:ifcontent>{$component->getPrefix()}</div>
 						{input $name, class => 'form-control'}
@@ -72,7 +75,7 @@
 					</div>
 				</div>
 
-				<div class="col-sm-9 col-xs-12 col-sm-offset-3">
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9 col-sm-offset-3'">
 					<span class="help-block error-block" n:ifcontent>{$component->getError()|translate}</span>
 					<span class="help-block" n:ifcontent>{$component->getDescription()|translate}</span>
 				</div>
@@ -80,14 +83,14 @@
 		{elseif $component instanceof Voonne\Forms\Controls\Checkbox}
 			{var $name = $control->getFullName($component)}
 
-			<div class="form-group{if $component->hasErrors()} has-error{/if}">
-				<div class="col-sm-9 col-xs-12 col-sm-offset-3">
+			<div n:class="'form-group', $component->hasErrors() ? 'has-error'">
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9 col-sm-offset-3'">
 					<div class="checkbox">
 						{input $name}
 					</div>
 				</div>
 
-				<div class="col-sm-9 col-xs-12 col-sm-offset-3">
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9 col-sm-offset-3'">
 					<span class="help-block error-block" n:ifcontent>{$component->getError()|translate}</span>
 					<span class="help-block" n:ifcontent>{$component->getDescription()|translate}</span>
 				</div>
@@ -95,15 +98,16 @@
 		{elseif $component instanceof Voonne\Forms\Controls\RadioList}
 			{var $name = $control->getFullName($component)}
 
-			<div class="form-group{if $component->hasErrors()} has-error{/if}">
-				<label n:name="$name" class="col-sm-3 control-label">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
-				<div class="col-sm-9 col-xs-12">
+			<div n:class="'form-group', $component->hasErrors() ? 'has-error'">
+				<label n:name="$name" n:class="'control-label', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-3' : 'col-xs-12'">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
+
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9'">
 					<div class="radio">
 						{input $name}
 					</div>
 				</div>
 
-				<div class="col-sm-9 col-xs-12 col-sm-offset-3">
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9 col-sm-offset-3'">
 					<span class="help-block error-block" n:ifcontent>{$component->getError()|translate}</span>
 					<span class="help-block" n:ifcontent>{$component->getDescription()|translate}</span>
 				</div>
@@ -111,15 +115,16 @@
 		{elseif $component instanceof Voonne\Forms\Controls\CheckboxList}
 			{var $name = $control->getFullName($component)}
 
-			<div class="form-group{if $component->hasErrors()} has-error{/if}">
-				<label n:name="$name" class="col-sm-3 control-label">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
-				<div class="col-sm-9 col-xs-12">
+			<div n:class="'form-group', $component->hasErrors() ? 'has-error'">
+				<label n:name="$name" n:class="'control-label', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-3' : 'col-xs-12'">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
+
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9'">
 					<div class="checkbox">
 						{input $name}
 					</div>
 				</div>
 
-				<div class="col-sm-9 col-xs-12 col-sm-offset-3">
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9 col-sm-offset-3'">
 					<span class="help-block error-block" n:ifcontent>{$component->getError()|translate}</span>
 					<span class="help-block" n:ifcontent>{$component->getDescription()|translate}</span>
 				</div>
@@ -127,13 +132,14 @@
 		{elseif $component instanceof Voonne\Forms\Controls\SelectBox || $component instanceof Voonne\Forms\Controls\MultiSelectBox}
 			{var $name = $control->getFullName($component)}
 
-			<div class="form-group{if $component->hasErrors()} has-error{/if}">
-				<label n:name="$name" class="col-sm-3 control-label">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
-				<div class="col-sm-9 col-xs-12">
+			<div n:class="'form-group', $component->hasErrors() ? 'has-error'">
+				<label n:name="$name" n:class="'control-label', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-3' : 'col-xs-12'">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
+
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9'">
 					{input $name, class => 'form-control'}
 				</div>
 
-				<div class="col-sm-9 col-xs-12 col-sm-offset-3">
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9 col-sm-offset-3'">
 					<span class="help-block error-block" n:ifcontent>{$component->getError()|translate}</span>
 					<span class="help-block" n:ifcontent>{$component->getDescription()|translate}</span>
 				</div>
@@ -141,16 +147,17 @@
 		{elseif $component instanceof Voonne\Forms\Controls\DatePicker}
 			{var $name = $control->getFullName($component)}
 
-			<div class="form-group{if $component->hasErrors()} has-error{/if}">
-				<label n:name="$name" class="col-sm-3 control-label">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
-				<div class="col-sm-9 col-xs-12">
+			<div n:class="'form-group', $component->hasErrors() ? 'has-error'">
+				<label n:name="$name" n:class="'control-label', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-3' : 'col-xs-12'">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
+
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9'">
 					<div class="input-group">
 						{input $name, class => 'form-control date-picker'}
 						<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
 					</div>
 				</div>
 
-				<div class="col-sm-9 col-xs-12 col-sm-offset-3">
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9 col-sm-offset-3'">
 					<span class="help-block error-block" n:ifcontent>{$component->getError()|translate}</span>
 					<span class="help-block" n:ifcontent>{$component->getDescription()|translate}</span>
 				</div>
@@ -158,16 +165,17 @@
 		{elseif $component instanceof Voonne\Forms\Controls\TimePicker}
 			{var $name = $control->getFullName($component)}
 
-			<div class="form-group{if $component->hasErrors()} has-error{/if}">
-				<label n:name="$name" class="col-sm-3 control-label">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
-				<div class="col-sm-9 col-xs-12">
+			<div n:class="'form-group', $component->hasErrors() ? 'has-error'">
+				<label n:name="$name" n:class="'control-label', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-3' : 'col-xs-12'">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
+
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9'">
 					<div class="input-group">
 						{input $name, class => 'form-control time-picker'}
 						<div class="input-group-addon"><i class="fa fa-clock-o"></i></div>
 					</div>
 				</div>
 
-				<div class="col-sm-9 col-xs-12 col-sm-offset-3">
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9 col-sm-offset-3'">
 					<span class="help-block error-block" n:ifcontent>{$component->getError()|translate}</span>
 					<span class="help-block" n:ifcontent>{$component->getDescription()|translate}</span>
 				</div>
@@ -175,16 +183,17 @@
 		{elseif $component instanceof Voonne\Forms\Controls\DateTimePicker}
 			{var $name = $control->getFullName($component)}
 
-			<div class="form-group{if $component->hasErrors()} has-error{/if}">
-				<label n:name="$name" class="col-sm-3 control-label">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
-				<div class="col-sm-9 col-xs-12">
+			<div n:class="'form-group', $component->hasErrors() ? 'has-error'">
+				<label n:name="$name" n:class="'control-label', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-3' : 'col-xs-12'">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
+
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9'">
 					<div class="input-group">
 						{input $name, class => 'form-control datetime-picker'}
 						<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
 					</div>
 				</div>
 
-				<div class="col-sm-9 col-xs-12 col-sm-offset-3">
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9 col-sm-offset-3'">
 					<span class="help-block error-block" n:ifcontent>{$component->getError()|translate}</span>
 					<span class="help-block" n:ifcontent>{$component->getDescription()|translate}</span>
 				</div>
@@ -193,7 +202,7 @@
 			{var $name = $control->getFullName($component)}
 
 			<div class="form-group">
-				<div class="col-sm-9 col-xs-12 col-sm-offset-3">
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9 col-sm-offset-3'">
 					{input $name, class => 'btn btn-default'}
 				</div>
 			</div>
@@ -201,7 +210,7 @@
 			{var $name = $control->getFullName($component)}
 
 			<div class="form-group">
-				<div class="col-sm-9 col-xs-12 col-sm-offset-3">
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9 col-sm-offset-3'">
 					{input $name, class => 'btn'}
 				</div>
 			</div>
@@ -212,15 +221,16 @@
 		{else}
 			{var $name = $control->getFullName($component)}
 
-			<div class="form-group{if $component->hasErrors()} has-error{/if}">
-				<label n:name="$name" class="col-sm-3 control-label">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
+			<div n:class="'form-group', $component->hasErrors() ? 'has-error'">
+				<label n:name="$name" n:class="'control-label', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-3' : 'col-xs-12'">{$component->caption|translate} <span class="optional" n:if="!$component->required">- {('voonne-form.optional'|translate)}</span></label>
+
 				<div class="col-sm-9 col-xs-12">
 					<div class="input-group">
 						{input $name, class => 'form-control'}
 					</div>
 				</div>
 
-				<div class="col-sm-9 col-xs-12 col-sm-offset-3">
+				<div n:class="'col-xs-12', $display == Voonne\Panels\Panels\FormPanel\FormPanel::DISPLAY_HORIZONTAL ? 'col-sm-9 col-sm-offset-3'">
 					<span class="help-block error-block" n:ifcontent>{$component->getError()|translate}</span>
 				</div>
 			</div>

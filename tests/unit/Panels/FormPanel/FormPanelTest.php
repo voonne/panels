@@ -62,6 +62,16 @@ class FormPanelTest extends Unit
 		$this->assertEquals('title', $this->formPanel->getTitle());
 	}
 
+
+	public function testSetDisplay()
+	{
+		$this->assertEquals(FormPanel::DISPLAY_HORIZONTAL, $this->formPanel->getDisplay());
+
+		$this->formPanel->setDisplay(FormPanel::DISPLAY_BASIC);
+
+		$this->assertEquals(FormPanel::DISPLAY_BASIC, $this->formPanel->getDisplay());
+	}
+
 }
 
 

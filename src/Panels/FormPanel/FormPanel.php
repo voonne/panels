@@ -14,6 +14,7 @@ use Nette\Forms\Controls\BaseControl;
 use Voonne\Forms\Container;
 use Voonne\Forms\Controls\SubmitButton;
 use Voonne\Forms\Form;
+use Voonne\Panels\InvalidArgumentException;
 use Voonne\Panels\InvalidStateException;
 use Voonne\Panels\Panels\Panel;
 
@@ -26,11 +27,18 @@ abstract class FormPanel extends Panel
 	 */
 	private $container;
 
-
 	/**
 	 * @var string
 	 */
 	private $title;
+
+	/**
+	 * @var string
+	 */
+	private $display = self::DISPLAY_HORIZONTAL;
+
+	const DISPLAY_BASIC = 'BASIC';
+	const DISPLAY_HORIZONTAL = 'HORIZONTAL';
 
 
 	/**
@@ -64,11 +72,34 @@ abstract class FormPanel extends Panel
 	}
 
 
+	/**
+	 * @return string
+	 */
+	public function getDisplay()
+	{
+		return $this->display;
+	}
+
+
+	/**
+	 * @param string $display
+	 */
+	public function setDisplay($display)
+	{
+		if (in_array(strtoupper($display), [self::DISPLAY_BASIC, self::DISPLAY_HORIZONTAL])) {
+			$this->display = strtoupper($display);
+		} else {
+			throw new InvalidArgumentException('Argument display must have a value ' . self::DISPLAY_BASIC . ' or ' . self::DISPLAY_HORIZONTAL . '.');
+		}
+	}
+
+
 	public function render()
 	{
 		$this->template->setFile(__DIR__ . '/FormPanel.latte');
 
 		$this->template->container = $this->container;
+		$this->template->display = $this->display;
 
 		$this->template->render();
 	}
