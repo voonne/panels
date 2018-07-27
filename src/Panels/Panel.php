@@ -34,7 +34,7 @@ abstract class Panel extends Control
 			throw new InvalidStateException('Method ' . __METHOD__ . ' is intended for initialization and should not be called more than once.');
 		}
 
-		$this->template->user = $this->user = $user;
+		$this->user = $user;
 	}
 
 
@@ -44,6 +44,14 @@ abstract class Panel extends Control
 	public function getUser()
 	{
 		return $this->user;
+	}
+
+
+	public function startup()
+	{
+		parent::startup();
+
+		$this->template->user = $this->user;
 	}
 
 
