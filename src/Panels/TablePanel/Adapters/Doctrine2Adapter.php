@@ -77,7 +77,7 @@ class Doctrine2Adapter implements IAdapter
 
 		foreach ($filters as $name => $value) {
 			if (isset($metadata->associationMappings[$name])) {
-				$queryBuilder->where(sprintf(
+				$queryBuilder->andWhere(sprintf(
 					'%s.%s = (SELECT u FROM %s u WHERE u.id = :%s)',
 					$queryBuilder->getDQLPart('from')[0]->getAlias(),
 					$name,
@@ -86,13 +86,35 @@ class Doctrine2Adapter implements IAdapter
 				))
 				->setParameter($name, $value);
 			} else {
-				$queryBuilder->where(sprintf(
-					'%s.%s LIKE :%s',
-					$queryBuilder->getDQLPart('from')[0]->getAlias(),
-					$name,
-					$name
-				))
-				->setParameter($name, '%' . $value . '%');
+				if (is_array($value)) {
+					if (!empty($value['from'])) {
+						$queryBuilder->andWhere(sprintf(
+							'%s.%s >= :%s',
+							$queryBuilder->getDQLPart('from')[0]->getAlias(),
+							$name,
+							$name . 'From'
+						))
+						->setParameter($name . 'From', $value['from']);
+					}
+
+					if (!empty($value['to'])) {
+						$queryBuilder->andWhere(sprintf(
+							'%s.%s <= :%s',
+							$queryBuilder->getDQLPart('from')[0]->getAlias(),
+							$name,
+							$name . 'To'
+						))
+						->setParameter($name . 'To', $value['to']);
+					}
+				} else {
+					$queryBuilder->andWhere(sprintf(
+						'%s.%s LIKE :%s',
+						$queryBuilder->getDQLPart('from')[0]->getAlias(),
+						$name,
+						$name
+					))
+					->setParameter($name, '%' . $value . '%');
+				}
 			}
 		}
 
@@ -110,8 +132,35 @@ class Doctrine2Adapter implements IAdapter
 		$queryBuilder = clone $this->queryBuilder;
 
 		foreach ($filters as $name => $value) {
-			$queryBuilder->where($queryBuilder->getDQLPart('from')[0]->getAlias() . '.' . $name . ' = :' . $name)
-				->setParameter($name, $value);
+			if (is_array($value)) {
+				if (!empty($value['from'])) {
+					$queryBuilder->andWhere(sprintf(
+						'%s.%s >= :%s',
+						$queryBuilder->getDQLPart('from')[0]->getAlias(),
+						$name,
+						$name . 'From'
+					))
+					->setParameter($name . 'From', $value['from']);
+				}
+
+				if (!empty($value['to'])) {
+					$queryBuilder->andWhere(sprintf(
+						'%s.%s <= :%s',
+						$queryBuilder->getDQLPart('from')[0]->getAlias(),
+						$name,
+						$name . 'To'
+					))
+					->setParameter($name . 'To', $value['to']);
+				}
+			} else {
+				$queryBuilder->andWhere(sprintf(
+					'%s.%s LIKE :%s',
+					$queryBuilder->getDQLPart('from')[0]->getAlias(),
+					$name,
+					$name
+				))
+				->setParameter($name, '%' . $value . '%');
+			}
 		}
 
 		return (new Paginator($queryBuilder))->count();

@@ -33,8 +33,25 @@
 			<tr n:if="$control->hasFilters()">
 				<th n:foreach="$columns as $column">
 					{if $column->getFilter()}
-						{var $input = $container . '-' . $column->getName()}
-						{input $input, class => 'form-control'}
+						{var $filter = $column->getFilter()}
+						{if in_array($filter->getType(), ['TEXT', 'SELECT'])}
+							{var $input = $container . '-' . $column->getName()}
+
+							{input $input, class => 'form-control'}
+						{elseif $filter->getType() === 'DATETIME'}
+							{var $fromInput = $container . '-' . $column->getName() . '-from'}
+							{var $toInput = $container . '-' . $column->getName() . '-to'}
+
+							<div class="input-group" style="margin-bottom: 5px;">
+								{input $fromInput, class => 'form-control datetime-picker'}
+								<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+							</div>
+
+							<div class="input-group">
+								{input $toInput, class => 'form-control datetime-picker'}
+								<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+							</div>
+						{/if}
 					{/if}
 				</th>
 

@@ -10,6 +10,7 @@
 
 namespace Voonne\Panels\Panels\TablePanel;
 
+use DateTime;
 use Nette\Utils\Paginator;
 use Nette\Utils\Strings;
 use ReflectionClass;
@@ -302,10 +303,30 @@ abstract class TablePanel extends Panel
 	 */
 	private function getFilters()
 	{
-		$filter = unserialize($this->filters);
+		$filters = unserialize($this->filters);
 
-		if ($filter) {
-			return $filter;
+		if ($filters) {
+			foreach ($filters as $name => $filter) {
+				switch ($this->columns[$name]->getFilter()->getType()) {
+					case Filter::TYPE_TEXT:
+						$filters[$name] = $filter;
+
+						break;
+					case Filter::TYPE_SELECT:
+						$filters[$name] = $filter;
+
+						break;
+					case Filter::TYPE_DATETIME:
+						$filters[$name] = [
+							'from' => !empty($filters[$name]['from']) ? (new DateTime())->setTimestamp($filters[$name]['from']) : null,
+							'to' => !empty($filters[$name]['to']) ? (new DateTime())->setTimestamp($filters[$name]['to']) : null
+						];
+
+						break;
+				}
+			}
+
+			return $filters;
 		} else {
 			return [];
 		}
@@ -316,12 +337,12 @@ abstract class TablePanel extends Panel
 	{
 		$this->template->setFile(__DIR__ . '/TablePanel.latte');
 
-		$filter = $this->getFilters();
+		$filters = $this->getFilters();
 
 		$paginator = new Paginator();
 		$paginator->setItemsPerPage($this->limit);
 		$paginator->setPage($this->page);
-		$paginator->setItemCount($this->adapter->getCount($filter));
+		$paginator->setItemCount($this->adapter->getCount($filters));
 
 		$this->template->columns = $this->columns;
 		$this->template->actions = $this->actions;
@@ -329,7 +350,7 @@ abstract class TablePanel extends Panel
 		$this->template->order = $this->order;
 		$this->template->customTemplates = $this->customTemplates;
 		$this->template->primaryAction = $this->primaryAction;
-		$this->template->rows = $this->adapter->getResults($filter, $this->getSort(), $this->getOrder());
+		$this->template->rows = $this->adapter->getResults($filters, $this->getSort(), $this->getOrder());
 		$this->template->paginator = $paginator;
 		$this->template->container = Strings::firstLower((new ReflectionClass($this))->getShortName());
 
@@ -357,6 +378,18 @@ abstract class TablePanel extends Panel
 							->setDefaultValue(isset($filter[$column->getName()]) ? $filter[$column->getName()] : null);
 
 						break;
+					case Filter::TYPE_DATETIME:
+						$dateContainer = $container->addContainer($column->getName());
+
+						$dateContainer->addDateTimePicker('from')
+							->setAttribute('placeholder', 'Od')
+						->setDefaultValue(isset($filter[$column->getName()]) ? $filter[$column->getName()]['from'] : null);
+
+						$dateContainer->addDateTimePicker('to')
+							->setAttribute('placeholder', 'Do')
+							->setDefaultValue(isset($filter[$column->getName()]) ? $filter[$column->getName()]['to'] : null);
+
+						break;
 				}
 			}
 		}
@@ -369,18 +402,36 @@ abstract class TablePanel extends Panel
 
 	public function success(Container $container, $values)
 	{
-		$filter = [];
+		$filters = [];
 
 		foreach ($this->columns as $column) {
 			/** @var Column $column */
 
 			if ($column->getFilter() && !empty($values->{$column->getName()})) {
-				$filter[$column->getName()] = $values->{$column->getName()};
+				$filter = $column->getFilter();
+
+				switch ($filter->getType()) {
+					case Filter::TYPE_TEXT:
+						$filters[$column->getName()] = $values->{$column->getName()};
+
+						break;
+					case Filter::TYPE_SELECT:
+						$filters[$column->getName()] = $values->{$column->getName()};
+
+						break;
+					case Filter::TYPE_DATETIME:
+						$filters[$column->getName()] = [
+							'from' => !empty($values->{$column->getName()}->from) ? $values->{$column->getName()}->from->getTimestamp() : null,
+							'to' => !empty($values->{$column->getName()}->to) ? $values->{$column->getName()}->to->getTimestamp() : null
+						];
+
+						break;
+				}
 			}
 		}
 
-		if(!empty($filter)) {
-			$this->filters = serialize($filter);
+		if(!empty($filters)) {
+			$this->filters = serialize($filters);
 		} else {
 			$this->filters = null;
 		}

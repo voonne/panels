@@ -31,12 +31,13 @@ class Filter
 
 	const TYPE_TEXT = 'TEXT';
 	const TYPE_SELECT = 'SELECT';
+	const TYPE_DATETIME = 'DATETIME';
 
 
 	public function __construct($type, array $items = null)
 	{
-		if (!in_array($type, [self::TYPE_TEXT, self::TYPE_SELECT])) {
-			throw new InvalidArgumentException("Type must be '" . self::TYPE_TEXT . "' or '" . self::TYPE_SELECT . "', '"  . $type . "' given.");
+		if (!in_array($type, [self::TYPE_TEXT, self::TYPE_SELECT, self::TYPE_DATETIME])) {
+			throw new InvalidArgumentException("Type must be '" . self::TYPE_TEXT . "', '" . self::TYPE_SELECT . "' or '" . self::TYPE_DATETIME . "', '" . $type . "' given.");
 		}
 
 		$this->type = $type;
