@@ -131,35 +131,49 @@ class Doctrine2Adapter implements IAdapter
 	{
 		$queryBuilder = clone $this->queryBuilder;
 
-		foreach ($filters as $name => $value) {
-			if (is_array($value)) {
-				if (!empty($value['from'])) {
-					$queryBuilder->andWhere(sprintf(
-						'%s.%s >= :%s',
-						$queryBuilder->getDQLPart('from')[0]->getAlias(),
-						$name,
-						$name . 'From'
-					))
-					->setParameter($name . 'From', $value['from']);
-				}
+		$metadata = $this->queryBuilder->getEntityManager()
+			->getClassMetadata($this->queryBuilder->getDQLPart('from')[0]->getFrom());
 
-				if (!empty($value['to'])) {
-					$queryBuilder->andWhere(sprintf(
-						'%s.%s <= :%s',
-						$queryBuilder->getDQLPart('from')[0]->getAlias(),
-						$name,
-						$name . 'To'
-					))
-					->setParameter($name . 'To', $value['to']);
-				}
-			} else {
+		foreach ($filters as $name => $value) {
+			if (isset($metadata->associationMappings[$name])) {
 				$queryBuilder->andWhere(sprintf(
-					'%s.%s LIKE :%s',
+					'%s.%s = (SELECT u FROM %s u WHERE u.id = :%s)',
 					$queryBuilder->getDQLPart('from')[0]->getAlias(),
 					$name,
+					$metadata->associationMappings[$name]['targetEntity'],
 					$name
 				))
-				->setParameter($name, '%' . $value . '%');
+				->setParameter($name, $value);
+			} else {
+				if (is_array($value)) {
+					if (!empty($value['from'])) {
+						$queryBuilder->andWhere(sprintf(
+							'%s.%s >= :%s',
+							$queryBuilder->getDQLPart('from')[0]->getAlias(),
+							$name,
+							$name . 'From'
+						))
+						->setParameter($name . 'From', $value['from']);
+					}
+
+					if (!empty($value['to'])) {
+						$queryBuilder->andWhere(sprintf(
+							'%s.%s <= :%s',
+							$queryBuilder->getDQLPart('from')[0]->getAlias(),
+							$name,
+							$name . 'To'
+						))
+						->setParameter($name . 'To', $value['to']);
+					}
+				} else {
+					$queryBuilder->andWhere(sprintf(
+						'%s.%s LIKE :%s',
+						$queryBuilder->getDQLPart('from')[0]->getAlias(),
+						$name,
+						$name
+					))
+					->setParameter($name, '%' . $value . '%');
+				}
 			}
 		}
 
